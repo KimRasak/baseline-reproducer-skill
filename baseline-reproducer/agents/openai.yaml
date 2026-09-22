@@ -1,0 +1,4 @@
+interface:
+  display_name: "Baseline Reproducer"
+  short_description: "Audit and reproduce published ML baselines"
+  default_prompt: "Use $baseline-reproducer to audit this paper’s public artifacts and reproduce the strongest claim the evidence supports."
