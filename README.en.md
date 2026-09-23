@@ -54,7 +54,7 @@ The following running example uses one fictional claim: Table 1 of `Paper X` rep
 | Grade | Chain completeness | Meaning | `Paper X / b1=82.7` example |
 |---|---|---|---|
 | <strong>AAA</strong> | Fully closed | Artifacts, identities, protocols, splits, and aggregation are explicit. For reproduction, the complete run, full audit, and required repetitions/uncertainty analysis are also complete. | The matching checkpoint, full test split, evaluation code, seeds, and aggregation are pinned. A complete rerun gives `82.6`, within the preregistered tolerance, with per-item results retained. |
-| <strong>AA</strong> | Substantially closed | The main chain is complete with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | All official artifacts exist, but a legacy API no longer runs. A recorded compatibility patch changes only the API call—not the model or protocol—and the rerun gives `82.6`. |
+| <strong>AA</strong> | Substantially closed | The main chain is complete with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | All official artifacts exist, but a legacy API no longer runs. A recorded compatibility patch changes only the API call—not the model or protocol[^protocol]—and the rerun gives `82.6`. |
 | <strong>A</strong> | Executable with material limitations | Claim-level validation is possible, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved; not a strict reproduction. | The checkpoint, code, and data exist, but author seeds are missing. A preregistered independent seed gives `82.5`, so only an independent fixed-protocol result is defensible. |
 | <strong>BBB</strong> | Partial chain | Evaluator replay, a frozen subset, or an independent protocol can run, but the paper's exact metric chain is not closed. | The authors release predictions and scoring code only. Rescoring recovers `82.7`, but no matching checkpoint exists to show that the model can produce those predictions. |
 | <strong>BB</strong> | Smoke only | Establishes import, checkpoint load, one-sample inference, or evaluator-interface execution only. | The checkpoint loads and predicts one `Dataset 1` sample. The full test set has not run, so no comparison with `82.7` is possible. |
@@ -114,6 +114,8 @@ The workflow was distilled from a long-running reproduction effort across releas
 No private artifacts, credentials, machine paths, or experiment data are included.
 
 [^evaluator-replay]: <strong>Evaluator replay</strong> means recalculating a paper's score from the authors' released outputs and evaluation code. For example, the authors release 1,000 generated videos and the VBench code; rerunning it gives `81.0`, matching the paper's `81.0`. This shows only that the scoring process is reproducible—not that the model generation or training process is reproducible.
+
+[^protocol]: A <strong>protocol</strong> is the fixed set of choices used to produce and score a metric, such as the test split, input preprocessing, inference steps, seeds, sample count, and scoring method. Renaming a legacy API argument does not change the protocol; using a different test set or number of inference steps does.
 
 ## License
 
