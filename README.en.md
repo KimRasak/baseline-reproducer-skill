@@ -30,7 +30,7 @@ Rate an atomic metric claim—a table cell—not a paper as a whole. For example
 | SOTA1 | a1 | a2 |
 | Ours | b1 | b2 |
 
-This table contains four claims. `b1` and `b2` are **self-model claims** made for the paper's model; `a1` and `a2` are **other-model claims** cited or remeasured by the paper.
+This table contains four claims. `b1` and `b2` are <strong>self-model claims</strong> made for the paper's model; `a1` and `a2` are <strong>other-model claims</strong> cited or remeasured by the paper.
 
 A paper may contain many experimental tables. Start with the most important few—typically the main results, decisive ablations, and central generalization tests—and register each important cell independently. Do not assign one global rating to the paper.
 
@@ -38,10 +38,10 @@ A paper may contain many experimental tables. Start with the most important few�
 
 ### Four independent ratings
 
-1. **TD — Test delivery completeness:** whether the authors delivered the weights, evaluation code, test data/split, and protocol needed to verify the value.
-2. **RD — Training delivery completeness:** whether the authors delivered the training code, training data/split, settings, and dependent weights needed to produce the evaluated checkpoint.
-3. **TR — Test reproduction completeness:** how far the reproducer actually executed and audited the checkpoint-to-metric path.
-4. **RR — Training reproduction completeness:** how far the reproducer actually executed and audited the raw-data-to-trained-checkpoint-to-metric path.
+1. <strong>TD — Test delivery completeness:</strong> whether the authors delivered the weights, evaluation code, test data/split, and protocol needed to verify the value.
+2. <strong>RD — Training delivery completeness:</strong> whether the authors delivered the training code, training data/split, settings, and dependent weights needed to produce the evaluated checkpoint.
+3. <strong>TR — Test reproduction completeness:</strong> how far the reproducer actually executed and audited the checkpoint-to-metric path.
+4. <strong>RR — Training reproduction completeness:</strong> how far the reproducer actually executed and audited the raw-data-to-trained-checkpoint-to-metric path.
 
 Delivery describes what the authors made available; reproduction describes what an independent reproducer actually verified. The ratings do not substitute for one another.
 
@@ -49,27 +49,27 @@ Delivery describes what the authors made available; reproduction describes what 
 
 | Grade | Chain completeness | Meaning |
 |---|---|---|
-| **AAA** | Fully closed | Artifacts, identities, protocols, splits, and aggregation are explicit. For reproduction, the complete run, full audit, and required repetitions/uncertainty analysis are also complete. |
-| **AA** | Substantially closed | The main chain is complete with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. |
-| **A** | Executable with material limitations | Claim-level validation is possible, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved; not a strict reproduction. |
-| **BBB** | Partial chain | Evaluator replay, a frozen subset, or an independent protocol can run, but the paper's exact metric chain is not closed. |
-| **BB** | Smoke only | Establishes import, checkpoint load, one-sample inference, or evaluator-interface execution only. |
-| **B** | Artifacts traced | Some code, weight, or data entry points are known, but no executable metric chain exists yet. |
-| **CCC** | Critically incomplete | A key checkpoint, code path, dataset, split, pairing key, or evaluator is absent, so the public release cannot test the claim. |
-| **D** | Invalid chain | Artifact identity is wrong, the protocol was silently substituted, the result was invalidated, or the evidence cannot belong to the target claim. |
-| **NR** | Not rated/not applicable | Not yet audited, or the dimension does not apply to this claim. |
+| <strong>AAA</strong> | Fully closed | Artifacts, identities, protocols, splits, and aggregation are explicit. For reproduction, the complete run, full audit, and required repetitions/uncertainty analysis are also complete. |
+| <strong>AA</strong> | Substantially closed | The main chain is complete with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. |
+| <strong>A</strong> | Executable with material limitations | Claim-level validation is possible, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved; not a strict reproduction. |
+| <strong>BBB</strong> | Partial chain | Evaluator replay, a frozen subset, or an independent protocol can run, but the paper's exact metric chain is not closed. |
+| <strong>BB</strong> | Smoke only | Establishes import, checkpoint load, one-sample inference, or evaluator-interface execution only. |
+| <strong>B</strong> | Artifacts traced | Some code, weight, or data entry points are known, but no executable metric chain exists yet. |
+| <strong>CCC</strong> | Critically incomplete | A key checkpoint, code path, dataset, split, pairing key, or evaluator is absent, so the public release cannot test the claim. |
+| <strong>D</strong> | Invalid chain | Artifact identity is wrong, the protocol was silently substituted, the result was invalidated, or the evidence cannot belong to the target claim. |
+| <strong>NR</strong> | Not rated/not applicable | Not yet audited, or the dimension does not apply to this claim. |
 
-The grade measures **chain completeness, not performance or paper credibility**. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA`, with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
+The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA`, with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
 ### AAA requirements by dimension
 
-**TD-AAA** requires a claim-matching downloadable checkpoint; available evaluation code and dependent weights, or an unambiguous metric definition; obtainable test data with the complete original split/pairing; specified inference, preprocessing, seeds/sample count, failure handling and aggregation; and freezable versions, licenses and sources.
+<strong>TD-AAA</strong> requires a claim-matching downloadable checkpoint; available evaluation code and dependent weights, or an unambiguous metric definition; obtainable test data with the complete original split/pairing; specified inference, preprocessing, seeds/sample count, failure handling and aggregation; and freezable versions, licenses and sources.
 
-**RD-AAA** additionally requires executable training code/configuration; raw training data with sample manifest, filtering, preprocessing and original split, or deterministic public reconstruction; all initialization/teacher/reward artifacts; and optimizer, schedule, batch, steps, randomness, compute, checkpoint selection and resume settings.
+<strong>RD-AAA</strong> additionally requires executable training code/configuration; raw training data with sample manifest, filtering, preprocessing and original split, or deterministic public reconstruction; all initialization/teacher/reward artifacts; and optimizer, schedule, batch, steps, randomness, compute, checkpoint selection and resume settings.
 
-**TR-AAA** requires the reproducer to execute the frozen TD-AAA path, audit all outputs, run the evaluator independently, retain per-item results, reproduce aggregation, and predeclare repetitions and uncertainty for stochastic evaluation.
+<strong>TR-AAA</strong> requires the reproducer to execute the frozen TD-AAA path, audit all outputs, run the evaluator independently, retain per-item results, reproduce aggregation, and predeclare repetitions and uncertainty for stochastic evaluation.
 
-**RR-AAA** requires executing preprocessing, complete training, checkpoint selection, inference, evaluation and aggregation from public raw data while preserving provenance. Numeric agreement is recorded separately as `matched`, `not_matched`, or an uncertainty-aware conclusion.
+<strong>RR-AAA</strong> requires executing preprocessing, complete training, checkpoint selection, inference, evaluation and aggregation from public raw data while preserving provenance. Numeric agreement is recorded separately as `matched`, `not_matched`, or an uncertainty-aware conclusion.
 
 ### Rating example
 
