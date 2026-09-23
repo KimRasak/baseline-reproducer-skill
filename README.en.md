@@ -49,7 +49,7 @@ Delivery describes what the authors made available; reproduction describes what 
 
 ### Grade definitions
 
-Grade each of the four dimensions independently; one generic table cannot be used to infer the others. In ascending order, the grades are `F`, `I`, `M-`, `M`, `M+`, `E`, `E+`, and `O`. The labels follow the “Failed / Improving / Medium / Excellent / Outstanding” naming scheme[[1](https://www.zhihu.com/question/495085246), [2](https://www.dingteam.com/article/285)], but here they measure <strong>reproduction-chain completeness</strong>, not numeric performance or paper credibility. `NR` means Not Rated / Not Applicable and is not a grade on this scale.
+Grade each of the four dimensions independently; one generic table cannot be used to infer the others. In ascending order, the grades are `F`, `I`, `M-`, `M`, `M+`, `E`, `E+`, and `O`. The labels follow the “Failed / Improving / Medium / Excellent / Outstanding” naming scheme[[1](https://www.zhihu.com/question/495085246), [2](https://www.dingteam.com/article/285)], but here they measure <strong>how much auditable evidence the released materials and actual reproduction provide for the claimed value</strong>. The grade therefore affects confidence in that value, but it does not judge whether the value is high or low, nor does it extend to an overall credibility rating for the entire paper. `NR` means Not Rated / Not Applicable and is not a grade on this scale.
 
 Every definition applies to one frozen claim. For example, “the model scores `b1=82.7` on `Dataset 1` in Table 1 of `Paper X`” is one claim; other cells in the same paper are graded separately.
 
@@ -57,53 +57,53 @@ Every definition applies to one frozen claim. For example, “the model scores `
 
 | Grade | Definition |
 |---|---|
-| **F** | Released artifacts have the wrong identity, the test protocol conflicts with the target claim, or the materials cannot be attributed to it. |
-| **I** | Only the paper value, repository, or scattered entry points can be located; a key checkpoint, test dataset/split, inference path, or evaluator is missing, so no test chain can be formed. |
-| **M-** | The release supports import, weight loading, one-sample testing, or evaluator replay[^evaluator-replay], but not the complete metric run from the matching checkpoint. |
-| **M** | Checkpoint, test code, data, and evaluator are broadly usable for claim-level testing, but seeds, exact versions, checkpoint selection, split, or aggregation have material gaps. |
-| **M+** | Main-chain test materials are complete and traceable; only minor deterministic reconstruction or scientifically neutral compatibility handling is needed. |
-| **E** | The matching checkpoint, full test split, inference and evaluation code, protocol parameters, seeds, and aggregation rules are all explicitly released. |
-| **E+** | In addition to `E`, immutable revisions, hashes, per-item outputs, or equivalent audit materials allow independent artifact and result verification. |
 | **O** | In addition to `E+`, a durable one-command test workflow, locked environment, full provenance, and machine-checkable manifests are delivered with no scientific parameters left to guess. |
+| **E+** | In addition to `E`, immutable revisions, hashes, per-item outputs, or equivalent audit materials allow independent artifact and result verification. |
+| **E** | The matching checkpoint, full test split, inference and evaluation code, protocol parameters, seeds, and aggregation rules are all explicitly released. |
+| **M+** | Main-chain test materials are complete and traceable; only minor deterministic reconstruction or scientifically neutral compatibility handling is needed. |
+| **M** | Checkpoint, test code, data, and evaluator are broadly usable for claim-level testing, but seeds, exact versions, checkpoint selection, split, or aggregation have material gaps. |
+| **M-** | The release supports import, weight loading, one-sample testing, or evaluator replay[^evaluator-replay], but not the complete metric run from the matching checkpoint. |
+| **I** | Only the paper value, repository, or scattered entry points can be located; a key checkpoint, test dataset/split, inference path, or evaluator is missing, so no test chain can be formed. |
+| **F** | Released artifacts have the wrong identity, the test protocol conflicts with the target claim, or the materials cannot be attributed to it. |
 
 #### RD: Training Delivery Completeness
 
 | Grade | Definition |
 |---|---|
-| **F** | Training artifacts belong to the wrong model, configuration, or data; the protocol is incorrectly substituted; or the materials cannot belong to the target checkpoint's training chain. |
-| **I** | Only a paper description or scattered training code exists; raw training data, split, key dependent weights, configuration, or entry point is critically absent, preventing meaningful training. |
-| **M-** | Training code can import, a small sample can be built, or a very short smoke run works, but full training under the paper's setup is not possible. |
-| **M** | Training code, primary data, and configuration are broadly usable and target training can start, but data version/split, seeds, hyperparameters, dependent weights, or checkpoint selection have material gaps. |
-| **M+** | Main materials from raw data to target checkpoint are complete; only minor deterministic data reconstruction or scientifically neutral compatibility handling is needed. |
-| **E** | Training data and split, code, full configuration, seeds, dependent weights, stopping rule, and checkpoint-selection rule are explicitly released. |
-| **E+** | In addition to `E`, data and weight hashes, a locked environment, training logs, and intermediate checkpoints make the training trajectory auditable. |
 | **O** | In addition to `E+`, a durable one-command training workflow, full data provenance and processing lineage, resource specification, and machine-checkable manifests are delivered with no scientific parameters left to guess. |
+| **E+** | In addition to `E`, data and weight hashes, a locked environment, training logs, and intermediate checkpoints make the training trajectory auditable. |
+| **E** | Training data and split, code, full configuration, seeds, dependent weights, stopping rule, and checkpoint-selection rule are explicitly released. |
+| **M+** | Main materials from raw data to target checkpoint are complete; only minor deterministic data reconstruction or scientifically neutral compatibility handling is needed. |
+| **M** | Training code, primary data, and configuration are broadly usable and target training can start, but data version/split, seeds, hyperparameters, dependent weights, or checkpoint selection have material gaps. |
+| **M-** | Training code can import, a small sample can be built, or a very short smoke run works, but full training under the paper's setup is not possible. |
+| **I** | Only a paper description or scattered training code exists; raw training data, split, key dependent weights, configuration, or entry point is critically absent, preventing meaningful training. |
+| **F** | Training artifacts belong to the wrong model, configuration, or data; the protocol is incorrectly substituted; or the materials cannot belong to the target checkpoint's training chain. |
 
 #### TR: Test Reproduction Completeness
 
 | Grade | Definition |
 |---|---|
-| **F** | The executed run used the wrong checkpoint, split, or protocol; its result is invalidated and cannot be attributed to the target claim. |
-| **I** | The chain was audited or execution attempted, but a critical omission or error still blocks testing and no valid output exists. |
-| **M-** | Only import, checkpoint loading, one-sample inference, or evaluator replay is complete; no full metric from the matching checkpoint exists. |
-| **M** | A claim-level test produced a metric, but reproducer-chosen seeds[^independent-seed], substitute versions, or incomplete statistics prevent strict alignment with the paper. |
-| **M+** | A full test under a substantially aligned protocol is complete and results are retained; only minor traceable compatibility handling remains, or required repetition/uncertainty analysis is absent. |
-| **E** | Checkpoint, full split, protocol, and aggregation were frozen; the full run, integrity checks, and per-item result retention are complete. |
-| **E+** | In addition to `E`, preregistered repetitions or uncertainty analysis are complete, and aggregation plus key artifact identities were independently checked. |
 | **O** | In addition to `E+`, the chain was rebuilt end to end in a clean environment, with evidence, commands, logs, hashes, and deviations fully auditable by a third party. |
+| **E+** | In addition to `E`, preregistered repetitions or uncertainty analysis are complete, and aggregation plus key artifact identities were independently checked. |
+| **E** | Checkpoint, full split, protocol, and aggregation were frozen; the full run, integrity checks, and per-item result retention are complete. |
+| **M+** | A full test under a substantially aligned protocol is complete and results are retained; only minor traceable compatibility handling remains, or required repetition/uncertainty analysis is absent. |
+| **M** | A claim-level test produced a metric, but reproducer-chosen seeds[^independent-seed], substitute versions, or incomplete statistics prevent strict alignment with the paper. |
+| **M-** | Only import, checkpoint loading, one-sample inference, or evaluator replay is complete; no full metric from the matching checkpoint exists. |
+| **I** | The chain was audited or execution attempted, but a critical omission or error still blocks testing and no valid output exists. |
+| **F** | The executed run used the wrong checkpoint, split, or protocol; its result is invalidated and cannot be attributed to the target claim. |
 
 #### RR: Training Reproduction Completeness
 
 | Grade | Definition |
 |---|---|
-| **F** | The executed training used the wrong data, model configuration, or protocol; the resulting checkpoint and result are invalidated and cannot be attributed to the target claim. |
-| **I** | Training was audited or attempted but remains blocked by critical data, configuration, dependency, or resource problems; no valid trained checkpoint exists. |
-| **M-** | Only data loading, a short-step run, single-batch overfitting, or a training-subset smoke test is complete; no target checkpoint suitable for full evaluation was produced. |
-| **M** | One training run and evaluation of its new checkpoint are complete, but data, seeds, scale, hyperparameters, or stopping rules differ materially from the paper. |
-| **M+** | One end-to-end training and full test under a substantially aligned protocol are complete; only minor traceable compatibility handling remains, or repeated training/uncertainty analysis is absent. |
-| **E** | Data and split, training configuration, seeds, dependent weights, and selection rules were frozen; end-to-end training, full testing, and training-trajectory audit are complete. |
-| **E+** | In addition to `E`, preregistered independent training repetitions or uncertainty analysis are complete, with data, checkpoint, and aggregation identities checked. |
 | **O** | In addition to `E+`, the chain was fully rebuilt in a clean environment, retaining data lineage, commands, logs, intermediate checkpoints, resource use, hashes, and every deviation for direct third-party audit. |
+| **E+** | In addition to `E`, preregistered independent training repetitions or uncertainty analysis are complete, with data, checkpoint, and aggregation identities checked. |
+| **E** | Data and split, training configuration, seeds, dependent weights, and selection rules were frozen; end-to-end training, full testing, and training-trajectory audit are complete. |
+| **M+** | One end-to-end training and full test under a substantially aligned protocol are complete; only minor traceable compatibility handling remains, or repeated training/uncertainty analysis is absent. |
+| **M** | One training run and evaluation of its new checkpoint are complete, but data, seeds, scale, hyperparameters, or stopping rules differ materially from the paper. |
+| **M-** | Only data loading, a short-step run, single-batch overfitting, or a training-subset smoke test is complete; no target checkpoint suitable for full evaluation was produced. |
+| **I** | Training was audited or attempted but remains blocked by critical data, configuration, dependency, or resource problems; no valid trained checkpoint exists. |
+| **F** | The executed training used the wrong data, model configuration, or protocol; the resulting checkpoint and result are invalidated and cannot be attributed to the target claim. |
 
 High grades do not require a result close to the paper value. A complete pinned run that stably disagrees with the paper may still earn `TR-E+` or `TR-O`, while the numeric outcome is separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
