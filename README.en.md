@@ -34,6 +34,8 @@ This table contains four claims. `b1` and `b2` are **self-model claims** made fo
 
 A paper may contain many experimental tables. Start with the most important few—typically the main results, decisive ablations, and central generalization tests—and register each important cell independently. Do not assign one global rating to the paper.
 
+<sub>Prioritize ablations by reproduction cost. Ablations that add or remove model modules and therefore require retraining or new weights are usually lower priority than the main result. Ablations produced by changing only test-time settings, inference parameters, input conditions, or evaluator switches while reusing the same released checkpoint are low-cost and controllable, so they may be tested earlier. Each test-time variation still needs its own frozen protocol and must not be merged into the main-result metric chain.</sub>
+
 ### Four independent ratings
 
 1. **TD — Test delivery completeness:** whether the authors delivered the weights, evaluation code, test data/split, and protocol needed to verify the value.
