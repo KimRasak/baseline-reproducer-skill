@@ -52,14 +52,16 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 
 <sub>消融实验按复现成本排序：若需要增删模型模块、重新训练或重新发布权重，通常优先级低于主结果；若只需改变测试时设置、推理参数、输入条件或 evaluator 开关，且可以复用同一公开权重，则属于低成本、可控的消融，可优先验证。任何测试时变更仍须单独冻结协议，不能与主结果混成同一条指标链路。</sub>
 
-### 四个独立评级
+### 两类、四个独立评级
 
 每个主张分别记录：
 
-1. <strong>TD — 测试交付完整度</strong>：作者是否交付了验证该数值所需的权重、测试代码、测试数据及划分和评测协议。
-2. <strong>RD — 训练交付完整度</strong>：作者是否交付了产生该权重所需的训练代码、训练数据及划分、训练设置和依赖权重。
-3. <strong>TR — 测试复现完整度</strong>：复现者是否实际运行并审计了权重到指标的测试链路。
-4. <strong>RR — 训练复现完整度</strong>：复现者是否实际运行并审计了数据到训练权重再到指标的完整链路。
+1. <strong>交付完整度</strong>：作者公开了什么。
+   - <strong>TD（Test Delivery Completeness，测试交付完整度）</strong>：作者是否交付了验证该数值所需的权重、测试代码、测试数据及划分和评测协议。
+   - <strong>RD（Training Delivery Completeness，训练交付完整度）</strong>：作者是否交付了产生该权重所需的训练代码、训练数据及划分、训练设置和依赖权重。
+2. <strong>复现完整度</strong>：复现者实际验证到哪里。
+   - <strong>TR（Test Reproduction Completeness，测试复现完整度）</strong>：复现者是否实际运行并审计了权重到指标的测试链路。
+   - <strong>RR（Training Reproduction Completeness，训练复现完整度）</strong>：复现者是否实际运行并审计了数据到训练权重再到指标的完整链路。
 
 交付评级描述“作者公开了什么”；复现评级描述“复现者实际验证到哪里”。四个评级不能互相替代。
 
@@ -77,11 +79,11 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 | <strong>D</strong> | 无效链路 | 工件身份错误、协议被静默替换、结果已作废，或证据不能归属于目标主张。 |
 | <strong>NR</strong> | 未评级/不适用 | 尚未审计，或该维度对当前主张不适用。 |
 
-评级衡量的是<strong>链路完整度，不是数值表现或论文可信度</strong>。在完全固定的协议下稳定得到与论文不一致的结果，仍可能具有 `TR-AAA`，同时数值结论记为 `not_matched` 或 `contradicted_under_pinned_protocol`。反之，只因本地数字接近论文值，不能获得高评级。
+评级衡量的是<strong>链路完整度，不是数值表现或论文可信度</strong>。在完全固定的协议下稳定得到与论文不一致的结果，仍可能具有 `TR-AAA`（Test Reproduction Completeness AAA，测试复现完整度 AAA），同时数值结论记为 `not_matched` 或 `contradicted_under_pinned_protocol`。反之，只因本地数字接近论文值，不能获得高评级。
 
 ### 各维度的 AAA 条件
 
-<strong>TD-AAA（测试交付完整）</strong>至少要求：
+<strong>TD-AAA（Test Delivery Completeness AAA，测试交付完整度 AAA）</strong>至少要求：
 
 - 与该主张对应的权重可获取且身份明确；
 - 测试代码/evaluator 与依赖权重可获取，或者指标定义足够明确并可无歧义计算；
@@ -89,23 +91,23 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 - 推理参数、预处理、seed/样本数、失败处理和聚合方式明确；
 - 版本、许可和下载来源可冻结。
 
-<strong>RD-AAA（训练交付完整）</strong>至少要求：
+<strong>RD-AAA（Training Delivery Completeness AAA，训练交付完整度 AAA）</strong>至少要求：
 
-- TD 所需链路完整，并且该权重与目标主张对应；
+- TD（Test Delivery Completeness，测试交付完整度）所需链路完整，并且该权重与目标主张对应；
 - 训练代码和有效启动配置可获取；
 - 训练原始数据、样本清单、过滤、预处理和原划分可获取或可按公开步骤确定性重建；
 - 初始化权重、教师/奖励模型等依赖工件可获取；
 - 优化器、学习率、batch、步数、随机性、算力、checkpoint 选择及恢复设置明确。
 
-<strong>TR-AAA（测试复现完整）</strong>要求复现者使用冻结的 TD-AAA 链路实际生成/推理、全量检查输出、独立运行 evaluator、保存逐样本结果并按原方法聚合；随机评测还应按预注册方案重复并报告不确定性。
+<strong>TR-AAA（Test Reproduction Completeness AAA，测试复现完整度 AAA）</strong>要求复现者使用冻结的 TD-AAA（Test Delivery Completeness AAA，测试交付完整度 AAA）链路实际生成/推理、全量检查输出、独立运行 evaluator、保存逐样本结果并按原方法聚合；随机评测还应按预注册方案重复并报告不确定性。
 
-<strong>RR-AAA（训练复现完整）</strong>要求从公开原始数据开始，实际执行预处理、完整训练、checkpoint 选择、推理、评测和聚合，并保存所有关键 provenance。指标是否接近论文值另记为 `matched`、`not_matched` 或带不确定性的比较结论。
+<strong>RR-AAA（Training Reproduction Completeness AAA，训练复现完整度 AAA）</strong>要求从公开原始数据开始，实际执行预处理、完整训练、checkpoint 选择、推理、评测和聚合，并保存所有关键 provenance。指标是否接近论文值另记为 `matched`、`not_matched` 或带不确定性的比较结论。
 
 ### 示例评级
 
 假设对上述主结果表审计后得到：
 
-| 主张 | 类型 | TD | RD | TR | RR | 数值结论 | 说明 |
+| 主张 | 类型 | TD（Test Delivery） | RD（Training Delivery） | TR（Test Reproduction） | RR（Training Reproduction） | 数值结论 | 说明 |
 |---|---|---:|---:|---:|---:|---|---|
 | `b1` | 本模型主张 | AAA | AA | AAA | BBB | matched | 精确权重、测试集和 evaluator 均公开并已复现；训练数据需按公开脚本重建，但尚只完成训练子集。 |
 | `b2` | 本模型主张 | A | CCC | A | NR | not_strictly_comparable | 权重公开，但作者未给 seed 和完整测试划分；训练数据未公开。只能报告固定独立协议结果。 |

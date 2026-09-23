@@ -36,12 +36,14 @@ A paper may contain many experimental tables. Start with the most important few�
 
 <sub>Prioritize ablations by reproduction cost. Ablations that add or remove model modules and therefore require retraining or new weights are usually lower priority than the main result. Ablations produced by changing only test-time settings, inference parameters, input conditions, or evaluator switches while reusing the same released checkpoint are low-cost and controllable, so they may be tested earlier. Each test-time variation still needs its own frozen protocol and must not be merged into the main-result metric chain.</sub>
 
-### Four independent ratings
+### Two categories, four independent ratings
 
-1. <strong>TD — Test delivery completeness:</strong> whether the authors delivered the weights, evaluation code, test data/split, and protocol needed to verify the value.
-2. <strong>RD — Training delivery completeness:</strong> whether the authors delivered the training code, training data/split, settings, and dependent weights needed to produce the evaluated checkpoint.
-3. <strong>TR — Test reproduction completeness:</strong> how far the reproducer actually executed and audited the checkpoint-to-metric path.
-4. <strong>RR — Training reproduction completeness:</strong> how far the reproducer actually executed and audited the raw-data-to-trained-checkpoint-to-metric path.
+1. <strong>Delivery completeness:</strong> what the authors made available.
+   - <strong>TD (Test Delivery Completeness):</strong> whether the authors delivered the weights, evaluation code, test data/split, and protocol needed to verify the value.
+   - <strong>RD (Training Delivery Completeness):</strong> whether the authors delivered the training code, training data/split, settings, and dependent weights needed to produce the evaluated checkpoint.
+2. <strong>Reproduction completeness:</strong> what an independent reproducer actually verified.
+   - <strong>TR (Test Reproduction Completeness):</strong> how far the reproducer executed and audited the checkpoint-to-metric path.
+   - <strong>RR (Training Reproduction Completeness):</strong> how far the reproducer executed and audited the raw-data-to-trained-checkpoint-to-metric path.
 
 Delivery describes what the authors made available; reproduction describes what an independent reproducer actually verified. The ratings do not substitute for one another.
 
@@ -59,21 +61,21 @@ Delivery describes what the authors made available; reproduction describes what 
 | <strong>D</strong> | Invalid chain | Artifact identity is wrong, the protocol was silently substituted, the result was invalidated, or the evidence cannot belong to the target claim. |
 | <strong>NR</strong> | Not rated/not applicable | Not yet audited, or the dimension does not apply to this claim. |
 
-The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA`, with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
+The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA` (Test Reproduction Completeness AAA), with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
 ### AAA requirements by dimension
 
-<strong>TD-AAA</strong> requires a claim-matching downloadable checkpoint; available evaluation code and dependent weights, or an unambiguous metric definition; obtainable test data with the complete original split/pairing; specified inference, preprocessing, seeds/sample count, failure handling and aggregation; and freezable versions, licenses and sources.
+<strong>TD-AAA (Test Delivery Completeness AAA)</strong> requires a claim-matching downloadable checkpoint; available evaluation code and dependent weights, or an unambiguous metric definition; obtainable test data with the complete original split/pairing; specified inference, preprocessing, seeds/sample count, failure handling and aggregation; and freezable versions, licenses and sources.
 
-<strong>RD-AAA</strong> additionally requires executable training code/configuration; raw training data with sample manifest, filtering, preprocessing and original split, or deterministic public reconstruction; all initialization/teacher/reward artifacts; and optimizer, schedule, batch, steps, randomness, compute, checkpoint selection and resume settings.
+<strong>RD-AAA (Training Delivery Completeness AAA)</strong> additionally requires executable training code/configuration; raw training data with sample manifest, filtering, preprocessing and original split, or deterministic public reconstruction; all initialization/teacher/reward artifacts; and optimizer, schedule, batch, steps, randomness, compute, checkpoint selection and resume settings.
 
-<strong>TR-AAA</strong> requires the reproducer to execute the frozen TD-AAA path, audit all outputs, run the evaluator independently, retain per-item results, reproduce aggregation, and predeclare repetitions and uncertainty for stochastic evaluation.
+<strong>TR-AAA (Test Reproduction Completeness AAA)</strong> requires the reproducer to execute the frozen TD-AAA (Test Delivery Completeness AAA) path, audit all outputs, run the evaluator independently, retain per-item results, reproduce aggregation, and predeclare repetitions and uncertainty for stochastic evaluation.
 
-<strong>RR-AAA</strong> requires executing preprocessing, complete training, checkpoint selection, inference, evaluation and aggregation from public raw data while preserving provenance. Numeric agreement is recorded separately as `matched`, `not_matched`, or an uncertainty-aware conclusion.
+<strong>RR-AAA (Training Reproduction Completeness AAA)</strong> requires executing preprocessing, complete training, checkpoint selection, inference, evaluation and aggregation from public raw data while preserving provenance. Numeric agreement is recorded separately as `matched`, `not_matched`, or an uncertainty-aware conclusion.
 
 ### Rating example
 
-| Claim | Type | TD | RD | TR | RR | Numeric outcome | Explanation |
+| Claim | Type | TD (Test Delivery) | RD (Training Delivery) | TR (Test Reproduction) | RR (Training Reproduction) | Numeric outcome | Explanation |
 |---|---|---:|---:|---:|---:|---|---|
 | `b1` | self-model | AAA | AA | AAA | BBB | matched | Exact weights, test set and evaluator were released and replayed; training data requires a public reconstruction script, and only a training subset has run. |
 | `b2` | self-model | A | CCC | A | NR | not_strictly_comparable | Weights are public, but seeds and the full test split are missing; training data is unavailable. Only an independent fixed-protocol result is defensible. |
