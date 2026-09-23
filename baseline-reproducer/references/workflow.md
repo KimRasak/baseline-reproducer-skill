@@ -1,6 +1,6 @@
 # Reproduction execution workflow
 
-The repository README is the canonical source for `TD`, `RD`, `TR`, and `RR` grade definitions. This document supplies execution detail only and must not introduce a competing rating system.
+Before assigning any grade, read [grading-rubric.md](grading-rubric.md), the packaged runtime copy of the repository README specification. This document supplies execution detail only and must not introduce a competing rating system.
 
 ## 1. Register one claim
 
@@ -51,7 +51,7 @@ Compare local compute with the training resources stated by the paper or officia
 
 Retain commands, logs, outputs, hashes, failed attempts, superseded results, compatibility changes, resource interference, and deviations.
 
-Assign all four dimensions using the README:
+Assign all four dimensions using the packaged grading rubric:
 
 - `TD` and `RD`: author delivery only.
 - `TR`: actual checkpoint-to-metric execution, protocol alignment, evidence, and numeric agreement.

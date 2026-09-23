@@ -5,7 +5,7 @@ description: Audit delivery completeness and reproduce an atomic ML/AI paper cla
 
 # Baseline Reproducer
 
-Audit and reproduce one atomic metric claim at a time. Treat the repository README as the canonical grading specification. Read [references/workflow.md](references/workflow.md) before execution.
+Audit and reproduce one atomic metric claim at a time. Before assigning any `TD`, `RD`, `TR`, or `RR` grade, you MUST read the packaged [grading rubric](references/grading-rubric.md). Read [the execution workflow](references/workflow.md) before running a reproduction. The grading rubric is the runtime copy of the repository README specification; if any summary in this file is less detailed, the rubric controls.
 
 ## Required output
 
@@ -16,7 +16,7 @@ For each claim, report four independent dimensions:
 - `TR` — Test Reproduction Completeness: what the reproducer actually ran and verified from checkpoint to metric.
 - `RR` — Training Reproduction Completeness: what the reproducer actually ran and verified from model initialization through training to the tested metric.
 
-Use base grades `O`, `E`, `M`, `I`, and `F`; use `E+` or `M+` only under the plus conditions in the README. Use `NR` for not rated or not applicable. Grade the highest level supported, subject to the weakest critical link.
+Use base grades `O`, `E`, `M`, `I`, and `F`; use `E+` or `M+` only under the plus conditions in the packaged grading rubric. Use `NR` for not rated or not applicable. Grade the highest level supported, subject to the weakest critical link.
 
 ## Non-negotiable distinctions
 

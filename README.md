@@ -24,6 +24,8 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 
 > 使用 `$baseline-reproducer` 审计这篇论文的官方工件，并复现其公开材料能够支持的最强主张。
 
+> <strong>运行时说明：</strong>Skill 被调用时会自动加载 `SKILL.md`，但不会自动读取仓库根目录的 README。为确保这里定义的评级规则实际生效，项目会把英文 README 中的评级内容同步到 Skill 内的 `references/grading-rubric.md`，并由 `SKILL.md` 强制要求在评级前读取。
+
 ## 主要原则
 
 - 优先运行官方代码、公开权重和官方评测器，而不是从论文重新生成实现；
