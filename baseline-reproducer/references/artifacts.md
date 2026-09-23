@@ -17,7 +17,7 @@ case/
 └── outputs/
 ```
 
-Use `scripts/repro_case.py init`. Store large artifacts by official URI/revision/hash when redistribution is inappropriate.
+Create this layout when a case starts; never overwrite an existing non-empty case. Store large artifacts by official URI/revision/hash when redistribution is inappropriate.
 
 ## Core semantics
 
@@ -31,4 +31,4 @@ Use `scripts/repro_case.py init`. Store large artifacts by official URI/revision
 
 Never replace raw media/data with derived features as provenance. Never put a paper value in a fresh-result field.
 
-Run `python scripts/repro_case.py validate path/to/case`. This checks structure and basic consistency, not scientific truth.
+Before closing a case, confirm the core files exist, JSON/JSONL parse, `claim_id` and `evidence_state` agree, high states have run records and a fresh checkpoint or training result, and the training gate is not `approved` while blockers remain. Structure checks are not scientific truth.

@@ -40,7 +40,7 @@ This order selects experimental baselines; it does not determine which relevant 
 
 Record primary sources, immutable revisions, licenses, hashes, checkpoint-to-row identity, raw-data provenance, split, evaluator code/weights, environment, compute envelope, and missing fields. Inspect paper/code/config disagreements explicitly.
 
-Use `scripts/repro_case.py init CASE_DIR --paper-id ID --title TITLE` to create a package. Fill it from primary sources; do not infer absent values.
+Create the evidence package from the layout in [references/artifacts.md](references/artifacts.md). Fill it from primary sources; do not infer absent values or overwrite existing case files.
 
 ### 4. Run cheapest-first gates
 
@@ -69,7 +69,7 @@ For batch generation or source rewriting, assert every intended substitution occ
 
 Run the evaluator separately over an immutable output set. Retain per-item scores before aggregation. Compare values using a declared deterministic rule; use the model only to explain discrepancies.
 
-Use `scripts/repro_case.py compare EXPECTED ACTUAL --abs-tol N [--rel-tol N]` for a scalar. For stochastic metrics, predeclare seeds/runs and compare distributions or intervals rather than selecting a favorable run.
+Compare a scalar with a declared absolute or relative tolerance recorded before the run. For stochastic metrics, predeclare seeds/runs and compare distributions or intervals rather than selecting a favorable run.
 
 ### 7. Report the exact level reached
 

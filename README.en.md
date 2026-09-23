@@ -47,21 +47,37 @@ A paper may contain many experimental tables. Start with the most important few�
 
 Delivery describes what the authors made available; reproduction describes what an independent reproducer actually verified. The ratings do not substitute for one another.
 
-### Rating scale
+### Delivery completeness grade definitions
 
-The following running example uses one fictional claim: Table 1 of `Paper X` reports `b1=82.7` for its model on `Dataset 1`. Each row shows how the same claim is graded under a different artifact and execution state.
+Delivery grades apply to `TD` and `RD`. They assess only what chain the authors' released materials can support; the reproducer's execution does not count toward these grades. The example below still uses Table 1 of `Paper X`, which reports `b1=82.7`. The examples primarily illustrate `TD`; apply the same scale to the released raw-data-to-checkpoint materials for `RD`.
 
-| Grade | Chain completeness | Meaning | `Paper X / b1=82.7` example |
+| Grade | Chain completeness | Delivery meaning | `Paper X / b1=82.7` example |
 |---|---|---|---|
-| <strong>AAA</strong> | Fully closed | Artifacts, identities, protocols, splits, and aggregation are explicit. For reproduction, the complete run, full audit, and required repetitions/uncertainty analysis are also complete. | The matching checkpoint, full test split, evaluation code, seeds, and aggregation are pinned. A complete rerun gives `82.6`, within the preregistered tolerance, with per-item results retained. |
-| <strong>AA</strong> | Substantially closed | The main chain is complete with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | All official artifacts exist, but a legacy API no longer runs. A recorded compatibility patch changes only the API call[^api-call]—not the model or protocol[^protocol]—and the rerun gives `82.6`. |
-| <strong>A</strong> | Executable with material limitations | Claim-level validation is possible, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved; not a strict reproduction. | The checkpoint, code, and data exist, but author seeds are missing. Reproducer-chosen seeds[^independent-seed] give `82.5`, so only an independent fixed-protocol result is defensible. |
-| <strong>BBB</strong> | Partial chain | Evaluator replay, a frozen subset, or an independent protocol can run, but the paper's exact metric chain is not closed. | No checkpoint is released—only ready-made test-set predictions and scoring code. The reproducer does not load a model; feeding those files into the scorer recovers `82.7` (evaluator replay[^evaluator-replay]). This verifies scoring, not that the model can produce the predictions. |
-| <strong>BB</strong> | Smoke only | Establishes import, checkpoint load, one-sample inference, or evaluator-interface execution only. | The checkpoint loads and predicts one `Dataset 1` sample. The full test set has not run, so no comparison with `82.7` is possible. |
-| <strong>B</strong> | Artifacts traced | Some code, weight, or data entry points are known, but no executable metric chain exists yet. | A repository and weight URL are found, but the weight cannot yet be tied to Table 1 and no working evaluation command is identified. |
-| <strong>CCC</strong> | Critically incomplete | A key checkpoint, code path, dataset, split, pairing key, or evaluator is absent, so the public release cannot test the claim. | The paper reports `82.7`, but releases no matching weight, test split, or metric implementation; the claim cannot be tested. |
-| <strong>D</strong> | Invalid chain | Artifact identity is wrong, the protocol was silently substituted, the result was invalidated, or the evidence cannot belong to the target claim. | The downloaded weight is later found to be another model variant, or a different `Dataset 1` split was used. The number cannot be attributed to `b1` and is invalidated. |
-| <strong>NR</strong> | Not rated/not applicable | Not yet audited, or the dimension does not apply to this claim. | `b1=82.7` has been registered, but its code, weight, data, and evaluation artifacts have not yet been audited. |
+| <strong>AAA</strong> | Fully closed | All required artifacts, identities, protocols, splits, and aggregation details are explicitly released, allowing the original chain to be closed. | The authors release the exact Table 1 checkpoint, full test split, evaluation code, seeds, and aggregation procedure. |
+| <strong>AA</strong> | Substantially closed | The main-chain materials are complete, requiring only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | All official artifacts exist, but the test manifest must be deterministically rebuilt by a released script, or the code needs only a legacy API-call update[^api-call]. |
+| <strong>A</strong> | Executable with material limitations | Core materials support claim-level validation, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved. | The checkpoint, code, and data exist, but author seeds are missing, so the original test setup cannot be recovered strictly. |
+| <strong>BBB</strong> | Partial chain | The release supports only evaluator replay, a frozen subset, or an independent protocol; the paper's original metric chain cannot be closed. | No checkpoint is released—only ready-made predictions and scoring code. These can recalculate `82.7` but cannot show that the model produces those predictions. |
+| <strong>BB</strong> | Smoke only | The release supports at most import, checkpoint loading, one-sample inference, or evaluator-interface checks. | A checkpoint and example script are released, but the full test split or executable full-evaluation entry point is absent. |
+| <strong>B</strong> | Artifacts traced | Some code, weight, or data entry points are known, but they do not yet form an executable metric chain. | A repository and weight URL are found, but the weight cannot be tied to Table 1 and no evaluation command is provided. |
+| <strong>CCC</strong> | Critically incomplete | A key checkpoint, code path, dataset, split, pairing key, or evaluator is absent, so the public release cannot test the claim. | The paper reports `82.7`, but releases no matching weight, test split, or metric implementation. |
+| <strong>D</strong> | Invalid chain | A released artifact's identity or protocol conflicts with the target claim and cannot be attributed to it. | The download points to another model variant, or the released script uses a different `Dataset 1` split. |
+| <strong>NR</strong> | Not rated/not applicable | Delivery artifacts have not yet been audited, or this delivery dimension does not apply to the claim. | `b1=82.7` is registered, but the authors' code, weights, data, and evaluation materials have not been inspected. |
+
+### Reproduction completeness grade definitions
+
+Reproduction grades apply to `TR` and `RR`. They assess how far the reproducer actually executed and audited the chain. Merely available materials do not earn a high reproduction grade if they have not been run. The examples primarily illustrate `TR`; apply the same scale to actual raw-data-to-new-checkpoint-to-metric execution for `RR`.
+
+| Grade | Chain completeness | Reproduction meaning | `Paper X / b1=82.7` example |
+|---|---|---|---|
+| <strong>AAA</strong> | Fully closed | The target chain was fully executed, fully audited, and subjected to required repetitions/uncertainty analysis, with inspectable evidence retained. | With checkpoint, full split, seeds, and aggregation pinned, a complete rerun gives `82.6` within the preregistered tolerance; per-item and repeated-run evidence is retained. |
+| <strong>AA</strong> | Substantially closed | The complete main chain was executed and audited with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | A recorded patch changes only an API call—not the model or protocol[^protocol]—and the complete rerun gives `82.6`. |
+| <strong>A</strong> | Executable with material limitations | A claim-level run is complete, but seeds, exact versions, checkpoint selection, or statistical details cannot be strictly aligned with the paper. | Author seeds are missing. The reproducer preregisters reproducer-chosen seeds[^independent-seed], completes the full test, and gets `82.5`; only an independent fixed-protocol result is defensible. |
+| <strong>BBB</strong> | Partial chain | Evaluator replay, a frozen subset, or an independent-protocol validation was executed, but the paper's original metric chain remains open. | Without loading the model, the reproducer feeds released predictions into the scorer and recovers `82.7` (evaluator replay[^evaluator-replay]). |
+| <strong>BB</strong> | Smoke only | Only import, checkpoint loading, one-sample inference, or evaluator-interface execution was completed. | The checkpoint loads and predicts one `Dataset 1` sample; the full test set has not run. |
+| <strong>B</strong> | Artifacts traced | Some artifacts or entry points were located, but no metric-producing chain has run successfully. | The repository and weight were downloaded, but weight identity is unconfirmed and the evaluation command has not run. |
+| <strong>CCC</strong> | Critically incomplete | Missing critical artifacts or protocol details prevent execution from starting or reaching a claim-testable state. | The matching weight and test split are absent, so the `b1` test chain cannot run. |
+| <strong>D</strong> | Invalid chain | The run used the wrong identity or a substituted protocol; its result is invalidated and cannot be attributed to the target claim. | After execution, the weight is found to be another model variant or the split to differ; the resulting number cannot belong to `b1`. |
+| <strong>NR</strong> | Not rated/not applicable | This reproduction dimension has not yet been executed or audited, or it does not apply to the claim. | `b1=82.7` is registered, but execution of its test chain has not begun. |
 
 The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA` (Test Reproduction Completeness AAA), with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
@@ -91,16 +107,6 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 ```
 
 Then ask: “Use `$baseline-reproducer` to audit this paper's official artifacts and reproduce the strongest claim the public release supports.”
-
-## Helper
-
-```bash
-python baseline-reproducer/scripts/repro_case.py init work/my-paper \
-  --paper-id my-paper --title "My Paper baseline reproduction"
-python baseline-reproducer/scripts/repro_case.py validate work/my-paper
-```
-
-The helper validates evidence-package structure, not scientific truth.
 
 ## Origin
 
