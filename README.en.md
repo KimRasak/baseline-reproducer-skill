@@ -47,48 +47,74 @@ A paper may contain many experimental tables. Start with the most important few�
 
 Delivery describes what the authors made available; reproduction describes what an independent reproducer actually verified. The ratings do not substitute for one another.
 
-### Delivery completeness grade definitions
+### Grade definitions
 
-Delivery grades apply to `TD` and `RD`. They assess only what chain the authors' released materials can support; the reproducer's execution does not count toward these grades. The example below still uses Table 1 of `Paper X`, which reports `b1=82.7`. The examples primarily illustrate `TD`; apply the same scale to the released raw-data-to-checkpoint materials for `RD`.
+Grade each of the four dimensions independently; one generic table cannot be used to infer the others. In ascending order, the grades are `F`, `I`, `M-`, `M`, `M+`, `E`, `E+`, and `O`. The labels follow the “Failed / Improving / Medium / Excellent / Outstanding” naming scheme[[1](https://www.zhihu.com/question/495085246), [2](https://www.dingteam.com/article/285)], but here they measure <strong>reproduction-chain completeness</strong>, not numeric performance or paper credibility. `NR` means Not Rated / Not Applicable and is not a grade on this scale.
 
-| Grade | Chain completeness | Delivery meaning | `Paper X / b1=82.7` example |
-|---|---|---|---|
-| <strong>AAA</strong> | Fully closed | All required artifacts, identities, protocols, splits, and aggregation details are explicitly released, allowing the original chain to be closed. | The authors release the exact Table 1 checkpoint, full test split, evaluation code, seeds, and aggregation procedure. |
-| <strong>AA</strong> | Substantially closed | The main-chain materials are complete, requiring only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | All official artifacts exist, but the test manifest must be deterministically rebuilt by a released script, or the code needs only a legacy API-call update[^api-call]. |
-| <strong>A</strong> | Executable with material limitations | Core materials support claim-level validation, but seeds, exact versions, checkpoint selection, or statistical details remain unresolved. | The checkpoint, code, and data exist, but author seeds are missing, so the original test setup cannot be recovered strictly. |
-| <strong>BBB</strong> | Partial chain | The release supports only evaluator replay, a frozen subset, or an independent protocol; the paper's original metric chain cannot be closed. | No checkpoint is released—only ready-made predictions and scoring code. These can recalculate `82.7` but cannot show that the model produces those predictions. |
-| <strong>BB</strong> | Smoke only | The release supports at most import, checkpoint loading, one-sample inference, or evaluator-interface checks. | A checkpoint and example script are released, but the full test split or executable full-evaluation entry point is absent. |
-| <strong>B</strong> | Artifacts traced | Some code, weight, or data entry points are known, but they do not yet form an executable metric chain. | A repository and weight URL are found, but the weight cannot be tied to Table 1 and no evaluation command is provided. |
-| <strong>CCC</strong> | Critically incomplete | A key checkpoint, code path, dataset, split, pairing key, or evaluator is absent, so the public release cannot test the claim. | The paper reports `82.7`, but releases no matching weight, test split, or metric implementation. |
-| <strong>D</strong> | Invalid chain | A released artifact's identity or protocol conflicts with the target claim and cannot be attributed to it. | The download points to another model variant, or the released script uses a different `Dataset 1` split. |
-| <strong>NR</strong> | Not rated/not applicable | Delivery artifacts have not yet been audited, or this delivery dimension does not apply to the claim. | `b1=82.7` is registered, but the authors' code, weights, data, and evaluation materials have not been inspected. |
+Every definition applies to one frozen claim. For example, “the model scores `b1=82.7` on `Dataset 1` in Table 1 of `Paper X`” is one claim; other cells in the same paper are graded separately.
 
-### Reproduction completeness grade definitions
+#### TD: Test Delivery Completeness
 
-Reproduction grades apply to `TR` and `RR`. They assess how far the reproducer actually executed and audited the chain. Merely available materials do not earn a high reproduction grade if they have not been run. The examples primarily illustrate `TR`; apply the same scale to actual raw-data-to-new-checkpoint-to-metric execution for `RR`.
+| Grade | Definition |
+|---|---|
+| **F** | Released artifacts have the wrong identity, the test protocol conflicts with the target claim, or the materials cannot be attributed to it. |
+| **I** | Only the paper value, repository, or scattered entry points can be located; a key checkpoint, test dataset/split, inference path, or evaluator is missing, so no test chain can be formed. |
+| **M-** | The release supports import, weight loading, one-sample testing, or evaluator replay[^evaluator-replay], but not the complete metric run from the matching checkpoint. |
+| **M** | Checkpoint, test code, data, and evaluator are broadly usable for claim-level testing, but seeds, exact versions, checkpoint selection, split, or aggregation have material gaps. |
+| **M+** | Main-chain test materials are complete and traceable; only minor deterministic reconstruction or scientifically neutral compatibility handling is needed. |
+| **E** | The matching checkpoint, full test split, inference and evaluation code, protocol parameters, seeds, and aggregation rules are all explicitly released. |
+| **E+** | In addition to `E`, immutable revisions, hashes, per-item outputs, or equivalent audit materials allow independent artifact and result verification. |
+| **O** | In addition to `E+`, a durable one-command test workflow, locked environment, full provenance, and machine-checkable manifests are delivered with no scientific parameters left to guess. |
 
-| Grade | Chain completeness | Reproduction meaning | `Paper X / b1=82.7` example |
-|---|---|---|---|
-| <strong>AAA</strong> | Fully closed | The target chain was fully executed, fully audited, and subjected to required repetitions/uncertainty analysis, with inspectable evidence retained. | With checkpoint, full split, seeds, and aggregation pinned, a complete rerun gives `82.6` within the preregistered tolerance; per-item and repeated-run evidence is retained. |
-| <strong>AA</strong> | Substantially closed | The complete main chain was executed and audited with only traceable compatibility handling or deterministic reconstruction that does not alter scientific meaning. | A recorded patch changes only an API call—not the model or protocol[^protocol]—and the complete rerun gives `82.6`. |
-| <strong>A</strong> | Executable with material limitations | A claim-level run is complete, but seeds, exact versions, checkpoint selection, or statistical details cannot be strictly aligned with the paper. | Author seeds are missing. The reproducer preregisters reproducer-chosen seeds[^independent-seed], completes the full test, and gets `82.5`; only an independent fixed-protocol result is defensible. |
-| <strong>BBB</strong> | Partial chain | Evaluator replay, a frozen subset, or an independent-protocol validation was executed, but the paper's original metric chain remains open. | Without loading the model, the reproducer feeds released predictions into the scorer and recovers `82.7` (evaluator replay[^evaluator-replay]). |
-| <strong>BB</strong> | Smoke only | Only import, checkpoint loading, one-sample inference, or evaluator-interface execution was completed. | The checkpoint loads and predicts one `Dataset 1` sample; the full test set has not run. |
-| <strong>B</strong> | Artifacts traced | Some artifacts or entry points were located, but no metric-producing chain has run successfully. | The repository and weight were downloaded, but weight identity is unconfirmed and the evaluation command has not run. |
-| <strong>CCC</strong> | Critically incomplete | Missing critical artifacts or protocol details prevent execution from starting or reaching a claim-testable state. | The matching weight and test split are absent, so the `b1` test chain cannot run. |
-| <strong>D</strong> | Invalid chain | The run used the wrong identity or a substituted protocol; its result is invalidated and cannot be attributed to the target claim. | After execution, the weight is found to be another model variant or the split to differ; the resulting number cannot belong to `b1`. |
-| <strong>NR</strong> | Not rated/not applicable | This reproduction dimension has not yet been executed or audited, or it does not apply to the claim. | `b1=82.7` is registered, but execution of its test chain has not begun. |
+#### RD: Training Delivery Completeness
 
-The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA` (Test Reproduction Completeness AAA), with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
+| Grade | Definition |
+|---|---|
+| **F** | Training artifacts belong to the wrong model, configuration, or data; the protocol is incorrectly substituted; or the materials cannot belong to the target checkpoint's training chain. |
+| **I** | Only a paper description or scattered training code exists; raw training data, split, key dependent weights, configuration, or entry point is critically absent, preventing meaningful training. |
+| **M-** | Training code can import, a small sample can be built, or a very short smoke run works, but full training under the paper's setup is not possible. |
+| **M** | Training code, primary data, and configuration are broadly usable and target training can start, but data version/split, seeds, hyperparameters, dependent weights, or checkpoint selection have material gaps. |
+| **M+** | Main materials from raw data to target checkpoint are complete; only minor deterministic data reconstruction or scientifically neutral compatibility handling is needed. |
+| **E** | Training data and split, code, full configuration, seeds, dependent weights, stopping rule, and checkpoint-selection rule are explicitly released. |
+| **E+** | In addition to `E`, data and weight hashes, a locked environment, training logs, and intermediate checkpoints make the training trajectory auditable. |
+| **O** | In addition to `E+`, a durable one-command training workflow, full data provenance and processing lineage, resource specification, and machine-checkable manifests are delivered with no scientific parameters left to guess. |
+
+#### TR: Test Reproduction Completeness
+
+| Grade | Definition |
+|---|---|
+| **F** | The executed run used the wrong checkpoint, split, or protocol; its result is invalidated and cannot be attributed to the target claim. |
+| **I** | The chain was audited or execution attempted, but a critical omission or error still blocks testing and no valid output exists. |
+| **M-** | Only import, checkpoint loading, one-sample inference, or evaluator replay is complete; no full metric from the matching checkpoint exists. |
+| **M** | A claim-level test produced a metric, but reproducer-chosen seeds[^independent-seed], substitute versions, or incomplete statistics prevent strict alignment with the paper. |
+| **M+** | A full test under a substantially aligned protocol is complete and results are retained; only minor traceable compatibility handling remains, or required repetition/uncertainty analysis is absent. |
+| **E** | Checkpoint, full split, protocol, and aggregation were frozen; the full run, integrity checks, and per-item result retention are complete. |
+| **E+** | In addition to `E`, preregistered repetitions or uncertainty analysis are complete, and aggregation plus key artifact identities were independently checked. |
+| **O** | In addition to `E+`, the chain was rebuilt end to end in a clean environment, with evidence, commands, logs, hashes, and deviations fully auditable by a third party. |
+
+#### RR: Training Reproduction Completeness
+
+| Grade | Definition |
+|---|---|
+| **F** | The executed training used the wrong data, model configuration, or protocol; the resulting checkpoint and result are invalidated and cannot be attributed to the target claim. |
+| **I** | Training was audited or attempted but remains blocked by critical data, configuration, dependency, or resource problems; no valid trained checkpoint exists. |
+| **M-** | Only data loading, a short-step run, single-batch overfitting, or a training-subset smoke test is complete; no target checkpoint suitable for full evaluation was produced. |
+| **M** | One training run and evaluation of its new checkpoint are complete, but data, seeds, scale, hyperparameters, or stopping rules differ materially from the paper. |
+| **M+** | One end-to-end training and full test under a substantially aligned protocol are complete; only minor traceable compatibility handling remains, or repeated training/uncertainty analysis is absent. |
+| **E** | Data and split, training configuration, seeds, dependent weights, and selection rules were frozen; end-to-end training, full testing, and training-trajectory audit are complete. |
+| **E+** | In addition to `E`, preregistered independent training repetitions or uncertainty analysis are complete, with data, checkpoint, and aggregation identities checked. |
+| **O** | In addition to `E+`, the chain was fully rebuilt in a clean environment, retaining data lineage, commands, logs, intermediate checkpoints, resource use, hashes, and every deviation for direct third-party audit. |
+
+High grades do not require a result close to the paper value. A complete pinned run that stably disagrees with the paper may still earn `TR-E+` or `TR-O`, while the numeric outcome is separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
 ### Rating example
 
 | Claim | Type | TD | RD | TR | RR | Outcome |
 |---|---|:---:|:---:|:---:|:---:|---|
-| `b1` | self-model | AAA | AA | AAA | BBB | matched |
-| `b2` | self-model | A | CCC | A | NR | not_strictly_comparable |
-| `a1` | other-model | BBB | NR | BBB | NR | author_table_only |
-| `a2` | other-model | D | NR | D | NR | invalidated |
+| `b1` | self-model | E | M+ | E+ | M- | matched |
+| `b2` | self-model | M | I | M | NR | not_strictly_comparable |
+| `a1` | other-model | M- | NR | M- | NR | author_table_only |
+| `a2` | other-model | F | NR | F | NR | invalidated |
 
 - **`b1`:** Exact weights, test set and evaluator were released and replayed; training data requires a public reconstruction script, and only a training subset has run.
 - **`b2`:** Weights are public, but seeds and the full test split are missing; training data is unavailable. Only an independent fixed-protocol result is defensible.
