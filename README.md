@@ -28,7 +28,7 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 
 - 优先运行官方代码、公开权重和官方评测器，而不是从论文重新生成实现；
 - 将论文拆成原子主张，分别记录证据等级；
-- 区分 evaluator replay、checkpoint 指标复现和完整训练复现；
+- 区分 evaluator replay[^evaluator-replay]、checkpoint 指标复现和完整训练复现；
 - 固定代码 revision、权重 hash、数据 split、seed 和评测协议；
 - 保留失败运行、兼容性修改、资源干扰和被作废的结果；
 - 缺少关键数据、权重或协议时明确停止，不做未经标注的替代；
@@ -172,6 +172,8 @@ case/
 该工作流提炼自一项长期论文复现实践，涉及公开视频生成 checkpoint、评测器、公开数据集和多 GPU 执行路径。Skill 泛化了其中关于身份冻结、协议分 lane、输出完整性审计、评测器回放、非覆盖式证据、结果作废和拒绝实质性协议替换的经验。
 
 仓库不包含私有模型工件、凭证、机器路径或实验数据。
+
+[^evaluator-replay]: <strong>Evaluator replay（评测器回放）</strong>是指固定评测代码、依赖权重、输入数据、预处理和聚合方式后，使用作者已发布的输出、逐样本分数或参考样例重新运行评测器，并检查能否恢复作者发布的评测结果。它验证的是“输出 → 指标”这段评测链路，不证明本地 checkpoint 能生成这些输出，也不证明训练流程可复现。
 
 ## 许可证
 

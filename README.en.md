@@ -15,7 +15,7 @@ It keeps deployment, inference, evaluator, checkpoint and training evidence sepa
 
 - Prefer official code, released weights, and official evaluators over generating a new implementation from the paper.
 - Split a paper into atomic claims and track evidence for each claim separately.
-- Distinguish evaluator replay, released-checkpoint metric reproduction, and full training reproduction.
+- Distinguish evaluator replay[^evaluator-replay], released-checkpoint metric reproduction, and full training reproduction.
 - Pin code revisions, artifact hashes, data splits, seeds, and evaluation protocols.
 - Retain failed runs, compatibility changes, resource interference, and invalidated results.
 - Stop explicitly when critical data, weights, or protocol details are missing; do not make an unlabelled substitution.
@@ -110,6 +110,8 @@ The helper validates evidence-package structure, not scientific truth.
 The workflow was distilled from a long-running reproduction effort across released video-generation checkpoints, evaluators, public datasets and multi-GPU paths. It generalizes identity freezing, protocol lanes, output-integrity audits, evaluator replay, non-overwriting evidence, explicit invalidation, and refusal of scientifically material substitutions.
 
 No private artifacts, credentials, machine paths, or experiment data are included.
+
+[^evaluator-replay]: <strong>Evaluator replay</strong> means pinning the evaluator code, dependent weights, input data, preprocessing, and aggregation, then rerunning it on author-released outputs, per-item scores, or reference examples to check whether the released evaluation result can be recovered. It validates the “outputs → metric” segment only; it does not show that a local checkpoint can generate those outputs or that the training process is reproducible.
 
 ## License
 
