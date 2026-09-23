@@ -111,7 +111,7 @@ The workflow was distilled from a long-running reproduction effort across releas
 
 No private artifacts, credentials, machine paths, or experiment data are included.
 
-[^evaluator-replay]: <strong>Evaluator replay</strong> means pinning the evaluator code, dependent weights, input data, preprocessing, and aggregation, then rerunning it on author-released outputs, per-item scores, or reference examples to check whether the released evaluation result can be recovered. It validates the “outputs → metric” segment only; it does not show that a local checkpoint can generate those outputs or that the training process is reproducible.
+[^evaluator-replay]: <strong>Evaluator replay</strong> means recalculating a paper's score from the authors' released outputs and evaluation code. For example, the authors release 1,000 generated videos and the VBench code; rerunning it gives `81.0`, matching the paper's `81.0`. This shows only that the scoring process is reproducible—not that the model generation or training process is reproducible.
 
 ## License
 
