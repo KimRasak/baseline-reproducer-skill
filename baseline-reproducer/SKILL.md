@@ -1,50 +1,50 @@
 ---
 name: baseline-reproducer
-description: Audit and reproduce a published ML/AI baseline from official code, released weights, test data, and evaluators. Use when selecting reproducible baselines, validating a checkpoint, replaying a reported metric, restoring an environment, or deciding whether full training reproduction is justified. Do not use for ordinary literature summaries or new-method ideation before baseline evidence is closed.
+description: Audit delivery completeness and reproduce an atomic ML/AI paper claim using official code, weights, data, and evaluators. Use to assign TD/RD/TR/RR grades, replay a reported metric, validate a released checkpoint, or decide whether training reproduction is eligible. Do not use for ordinary literature summaries or new-method ideation.
 ---
 
 # Baseline Reproducer
 
-Reproduce the strongest claim supported by public artifacts without silently filling gaps. Prefer replaying an official checkpoint and evaluator over reimplementing the paper.
+Audit and reproduce one atomic metric claim at a time. Treat the repository README as the canonical grading specification. Read [references/workflow.md](references/workflow.md) before execution.
 
-## Keep these outcomes separate
+## Required output
 
-- Evaluate an atomic claim, not a paper's credibility as a whole.
-- Separate deployment, inference, evaluator replay, released-checkpoint evaluation, and training reproduction.
-- A runnable checkpoint is not a reproduced metric. A reproduced checkpoint metric is not reproduced training.
-- Preserve reported values as claims; never copy them into local-result fields.
-- Treat missing artifacts as `untestable` or `blocked`, not failed results.
-- Never substitute data, weights, seeds, evaluator, model variant, or implementation without opening a separately labelled compatibility or independent-protocol lane.
-- Retain failed attempts and deviations. Never overwrite prior run evidence.
+For each claim, report four independent dimensions:
 
-Read [references/evidence-model.md](references/evidence-model.md) before assigning a state, [references/workflow.md](references/workflow.md) when executing, and [references/artifacts.md](references/artifacts.md) when creating the evidence package.
+- `TD` — Test Delivery Completeness: what the authors delivered for checkpoint-to-metric testing.
+- `RD` — Training Delivery Completeness: what the authors delivered for data-to-checkpoint training.
+- `TR` — Test Reproduction Completeness: what the reproducer actually ran and verified from checkpoint to metric.
+- `RR` — Training Reproduction Completeness: what the reproducer actually ran and verified from model initialization through training to the tested metric.
+
+Use base grades `O`, `E`, `M`, `I`, and `F`; use `E+` or `M+` only under the plus conditions in the README. Use `NR` for not rated or not applicable. Grade the highest level supported, subject to the weakest critical link.
+
+## Non-negotiable distinctions
+
+- Delivery and reproduction do not substitute for one another.
+- Grade `TD` and `RD` only from the scope, specificity, availability, and claim linkage of author-released materials. Never use local execution success or numeric agreement to raise or lower a delivery grade.
+- Grade `TR` and `RR` only from work actually executed and evidence actually retained.
+- Reproduction is constrained by delivery. Missing author training code or unspecified material parameters remain missing; do not complete the code or guess the settings and call the result strict reproduction.
+- You may locate a publicly available dataset and the exact paper-specified split, and may run author-specified deterministic preprocessing, without lowering a reproduction grade.
+- Label reproducer-written implementations, guessed settings, substituted data, or materially changed protocols as independent implementation/protocol results.
+- A nearby number cannot compensate for the wrong weights, data split, or protocol.
 
 ## Workflow
 
-### 1. Define one claim
+### 1. Freeze one atomic claim
 
-Freeze paper revision, table/figure row, model/config, dataset and split, inference protocol, evaluator revision, metric, aggregation, reported value, and tolerance. If these cannot be stated, do artifact discovery only.
+Record paper revision, table/figure cell, model and configuration, checkpoint identity, training initialization, training and test data/splits, inference and training protocols, evaluator identity, metric, aggregation, reported value, and the decision tolerance.
 
-### 2. Admit candidates by reproducibility
+### 2. Audit delivery
 
-Among scientifically relevant baselines, prefer:
+Use primary sources. Record immutable revisions, URLs, hashes, licenses, environment versions, artifact-to-claim mappings, missing fields, and paper/code/config conflicts.
 
-1. official training + evaluation code + paper-matching weights + reconstructable public data;
-2. official evaluation code + paper-matching weights + reconstructable public test protocol;
-3. official training/evaluation code without weights;
-4. non-official implementation or paper only.
+Assign `TD` and `RD` before considering local run outcomes. Do not treat locally discovered author-specified public data or deterministic preprocessing as author delivery unless the authors actually linked or specified it.
 
-This order selects experimental baselines; it does not determine which relevant papers must be cited.
+### 3. Declare numeric agreement before running
 
-### 3. Audit before expensive execution
+Choose an absolute or relative tolerance from the paper's reporting precision, metric variability, and domain convention. Do not relax it after seeing results. Values within tolerance are consistent; where appropriate, equality after rounding to the paper's published precision may also count as consistent.
 
-Record primary sources, immutable revisions, licenses, hashes, checkpoint-to-row identity, raw-data provenance, split, evaluator code/weights, environment, compute envelope, and missing fields. Inspect paper/code/config disagreements explicitly.
-
-Create the evidence package from the layout in [references/artifacts.md](references/artifacts.md). Fill it from primary sources; do not infer absent values or overwrite existing case files.
-
-### 4. Run cheapest-first gates
-
-Advance only after the preceding result is terminal and audited:
+### 4. Run cheapest-first
 
 ```text
 artifact identity
@@ -57,42 +57,36 @@ artifact identity
 → full training reproduction
 ```
 
-Do not train merely because compute is idle. Require a paper-matching endpoint, legally usable raw data, reconstructable preprocessing, complete training configuration, evaluator identity, and affordable compute.
+Validate output count, identities, pairings, hashes, readability, duplicates, failures, and denominator coverage before scoring. Preserve commands, logs, per-item outputs, failed attempts, compatibility changes, and protocol deviations.
 
-### 5. Validate outputs before scoring
+### 5. Apply the RR compute gate
 
-Check expected count, unique IDs/seeds, hashes, decode/readability, shape/schema, failures, duplicate outputs, input-output mapping, and denominator coverage. Exit code zero is insufficient.
+Before training reproduction, compare locally available compute with the resources stated by the paper or official repository. If local compute is lower, skip training reproduction and assign `RR-NR`. Do not shrink the model, dataset, duration, or precision and retain an `RR` grade for the original claim.
 
-For batch generation or source rewriting, assert every intended substitution occurred. If different inputs yield identical hashes or identical per-group statistics, stop and audit the input path before scoring.
+### 6. Grade reproduction
 
-### 6. Score independently
+- `TR-O` requires a strictly aligned or verified-equivalent environment, correct claim-matching weights, exact test split, specified execution/parameters/metric, a full test, and a value within the preregistered tiny tolerance.
+- `RR-O` additionally requires the same initialization (from scratch or specified base weights), exact training data/split, claimed algorithm and full training configuration, a newly trained model, and evaluation within the preregistered tiny tolerance.
+- A strictly aligned run outside tolerance cannot receive `O`; grade its execution/evidence at the applicable lower level and report `not_matched` or `contradicted_under_pinned_protocol` separately.
 
-Run the evaluator separately over an immutable output set. Retain per-item scores before aggregation. Compare values using a declared deterministic rule; use the model only to explain discrepancies.
+### 7. Report narrowly
 
-Compare a scalar with a declared absolute or relative tolerance recorded before the run. For stochastic metrics, predeclare seeds/runs and compare distributions or intervals rather than selecting a favorable run.
+For every claim, provide:
 
-### 7. Report the exact level reached
-
-State the tested claim, what ran, artifact/protocol identities, reported and fresh values, coverage, uncertainty, deviations, interference, failed attempts, narrow verdict, and next gate or stop decision.
+1. claim identity and paper-reported value;
+2. `TD`, `RD`, `TR`, and `RR` grades with concrete reasons;
+3. reported versus reproduced value and preregistered tolerance;
+4. artifact/protocol identities and deviations;
+5. what ran, coverage, uncertainty, failures, and blockers;
+6. a narrow numeric verdict and the next permitted action.
 
 ## Stop conditions
 
-Stop or downgrade scope when:
-
-- released weights cannot be tied to the claimed row;
-- raw data, pairing key, split, required per-sample weight, evaluator implementation, or license is missing;
-- official config disables or differs from the headline method;
-- only a miniature/different benchmark is available;
-- a full run has no claim-level endpoint;
-- repeated failure establishes a stable resource/protocol blocker;
-- resource interference invalidates isolation;
-- completion requires guessing a scientifically material choice.
-
-A well-evidenced blocked decision is a successful audit.
+Stop or reduce scope when required identity, data/split, pairing, code, weights, evaluator, training parameters, or legal access is missing; when completing the chain requires guessing a scientifically material choice; or when a run is invalidated by wrong artifacts, protocol substitution, output corruption, or resource interference.
 
 ## Safety
 
-- Inspect shared accelerators and ports before launch. Readiness is not authorization to preempt a process.
-- Isolate generated or legacy code. Put compatibility patches in a separate worktree and retain the diff.
+- Inspect shared accelerators and ports before launch; never preempt another process without authorization.
+- Isolate compatibility changes and retain their diff.
 - Do not expose credentials or redistribute artifacts beyond their licenses.
 - Obtain explicit authorization before paid services, large downloads, expensive compute, remote mutations, or stopping processes.

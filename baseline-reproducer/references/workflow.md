@@ -1,58 +1,60 @@
-# Gated reproduction workflow
+# Reproduction execution workflow
 
-## Candidate admission
+The repository README is the canonical source for `TD`, `RD`, `TR`, and `RR` grade definitions. This document supplies execution detail only and must not introduce a competing rating system.
 
-Confirm relevance, then record the exact claim, official revision, checkpoint-to-row identity, public raw data/pairing/split/license, official entrypoints, evaluator weights, and effective compute. Do not create an active case for a speculative candidate unless audit or execution begins.
+## 1. Register one claim
 
-## Freeze identity and protocol
+Identify one table/figure cell and freeze the paper revision, model/configuration, checkpoint, reported value, metric, aggregation, dataset and split, evaluator, test protocol, training initialization, and training protocol. Different scientifically material settings are different claims or independently labelled protocol lanes.
 
-Hash papers, configs, prompt lists, checkpoints, archives, evaluator weights and wrappers. Freeze input schema, sampler/steps, seeds, retries, evaluator preprocessing/aggregation, output count and decision rule. If author seeds are missing, choose a deterministic independent policy and label it accordingly.
+## 2. Audit delivery independently of execution
 
-## Separate environments
+For `TD`, inspect author-released test environment information, claim-matching weights, exact test set/split, test parameters, and test rules. For `RD`, inspect the training environment, exact training data/split, initialization or base weights, training code, all parameters, stopping conditions, checkpoint-selection rule, and training rules.
 
-Use independent generation/training and evaluation environments when needed. Inspect entrypoints before treating `--help` as CPU-only; some tools import every model or initialize CUDA before argument parsing. Put compatibility changes in an alternate worktree and classify whether they are metadata-only, environment compatibility, implementation repair, or a scientifically material protocol change. The last creates a new lane.
+Use official primary sources and record URLs, revisions, hashes, licenses, identities, and omissions. Delivery grades depend only on what the authors made available and specified. A local run, successful checkpoint, or matching number never changes `TD` or `RD`.
 
-## Smoke ladder
+## 3. Bound reproduction by delivery
 
-1. Files and hashes.
-2. Imports and strict checkpoint load.
-3. One readable output.
-4. Evaluator reads a tiny valid input and emits per-item output.
-5. Frozen subset has complete mappings and denominators.
-6. Full checkpoint run reaches expected count.
-7. Training reads a real batch, computes required losses/rewards, backpropagates, steps, saves and resumes.
-8. Full training only after a claim-level endpoint exists.
+You may independently download a publicly available dataset and exact split explicitly identified by the authors. You may run preprocessing that the paper or official repository fully specifies. These are retrieval or deterministic reconstruction and do not reduce `TR` or `RR`.
 
-Tiny-sample Fréchet metrics or aggregate scores are interface tests, not scientific results.
+Do not write missing author training code or guess omitted training parameters, stopping conditions, or checkpoint-selection rules. Record them as missing. Any result from a reproducer-written implementation, guessed setting, substituted dataset, reduced model, or materially altered protocol belongs to a clearly labelled independent protocol and is not strict reproduction.
 
-## Batch integrity
+## 4. Freeze protocol and agreement rule
 
-Validate planned vs observed IDs, intact prompt/condition passage, substitution counts, unique seeds, hashes/duplicates, decoding, schema, failed attempts, and raw-input → cache → score mapping.
+Before execution, save effective environment versions, code and artifact hashes, input IDs, parameters, seeds, retries, preprocessing, metric implementation, aggregation, expected output count, and an absolute or relative tolerance. Base tolerance on reporting precision, metric variability, and domain convention; never loosen it after seeing the result.
 
-Common traps:
+A compatible CUDA, driver, or hardware version does not reduce `TR` or `RR` when documented and verified not to alter computation/training semantics, precision mode, or result interpretation.
 
-- shell quoting splits one prompt into many inputs;
-- source replacement matches zero times while the run completes;
-- all ranks bind one GPU unless binding occurs before framework import;
-- after `CUDA_VISIBLE_DEVICES=3`, use logical `cuda`, not necessarily `cuda:3`;
-- mixed directories cause suffix-based evaluators to select JSON and emit NaN;
-- aggregate agreement hides opposing component errors;
-- feature caches do not replace raw-data provenance;
-- a response from the wrong model identity is not target-model evidence;
-- exit code zero does not establish output identity or scientific validity.
+## 5. Execute cheapest-first
 
-## Independent evaluation
+1. Verify files, versions, identities, and hashes.
+2. Import code and strictly load the checkpoint.
+3. Produce one readable, correctly paired output.
+4. Verify the evaluator accepts a tiny valid input and emits per-item output.
+5. Run a frozen subset and validate complete mappings and denominators.
+6. Run the full checkpoint test.
+7. For eligible training, read a real batch, compute losses, backpropagate, step, save, reload, and resume.
+8. Run full training only after the target test endpoint is closed.
 
-Freeze outputs before scoring. Save evaluator command/environment, code and weight hashes, per-item output, coverage, logs, aggregation and result hash. When author media and scores exist, replay the evaluator first to separate evaluator drift from model differences.
+An interface smoke, tiny subset, or evaluator replay is not a full checkpoint reproduction.
 
-## Statistical closure
+## 6. Check output integrity before scoring
 
-Use the paper's unit of analysis. Pair by input/seed, retain repeated runs, uncertainty, denominators and missing items. Never compare one run with a paper's multi-run mean as equivalent. Keep an interference-affected run but do not pool it as isolated evidence.
+Validate planned versus observed IDs, sample count, input-output and input-label pairing, seeds, hashes and duplicates, readability, schema/shape, failed items, retries, denominator coverage, and raw-input-to-score mapping. Exit code zero is insufficient.
 
-## Training gate
+Freeze the output set before scoring. Save evaluator command/environment, code and weight hashes, per-item scores, coverage, aggregation, and result hash. Evaluator replay uses author-released outputs and scoring code; it verifies scoring, not model generation or training.
 
-Require a matching endpoint, legal raw data, enabled headline method, all auxiliary weights, optimizer/schedule/global batch/world size/seeds/checkpoint selection, save/resume smoke, closed evaluator, and approved compute. If per-item weights or a headline mechanism are missing, stop rather than manufacture them.
+## 7. Apply the training compute gate
 
-## Closeout
+Compare local compute with the training resources stated by the paper or official repository. If local resources are lower, skip training reproduction and record `RR-NR`. Do not reduce model size, data, epochs/steps, world size, or precision and then grade the run as reproduction of the original claim.
 
-Publish a local metric only after execution, output audit and independent evaluation are terminal. Preserve supersession instead of rewriting invalidated history; update human and machine trackers together.
+## 8. Close and grade
+
+Retain commands, logs, outputs, hashes, failed attempts, superseded results, compatibility changes, resource interference, and deviations.
+
+Assign all four dimensions using the README:
+
+- `TD` and `RD`: author delivery only.
+- `TR`: actual checkpoint-to-metric execution, protocol alignment, evidence, and numeric agreement.
+- `RR`: actual initialization-to-trained-checkpoint-to-metric execution, subject to compute eligibility.
+
+`TR-O` and `RR-O` require values within the preregistered tiny tolerance. A strictly aligned result outside tolerance may receive the applicable lower reproduction grade, with the numeric verdict separately recorded as `not_matched` or `contradicted_under_pinned_protocol`.

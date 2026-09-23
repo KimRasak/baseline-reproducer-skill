@@ -1,4 +1,4 @@
 interface:
   display_name: "Baseline Reproducer"
-  short_description: "Audit and reproduce published ML baselines"
-  default_prompt: "Use $baseline-reproducer to audit this paper’s public artifacts and reproduce the strongest claim the evidence supports."
+  short_description: "Grade TD/RD delivery and TR/RR reproduction"
+  default_prompt: "Use $baseline-reproducer to audit one atomic paper claim. Follow the repository README as the canonical rubric; report independent TD, RD, TR, and RR grades with concrete reasons, apply RR-NR when local training compute is insufficient, and never guess missing training code or parameters."
