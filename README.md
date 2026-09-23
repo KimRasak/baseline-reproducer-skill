@@ -83,38 +83,21 @@ ln -s "$(pwd)/baseline-reproducer" ~/.codex/skills/baseline-reproducer
 
 评级衡量的是<strong>链路完整度，不是数值表现或论文可信度</strong>。在完全固定的协议下稳定得到与论文不一致的结果，仍可能具有 `TR-AAA`（Test Reproduction Completeness AAA，测试复现完整度 AAA），同时数值结论记为 `not_matched` 或 `contradicted_under_pinned_protocol`。反之，只因本地数字接近论文值，不能获得高评级。
 
-### 各维度的 AAA 条件
-
-<strong>TD-AAA（Test Delivery Completeness AAA，测试交付完整度 AAA）</strong>至少要求：
-
-- 与该主张对应的权重可获取且身份明确；
-- 测试代码/evaluator 与依赖权重可获取，或者指标定义足够明确并可无歧义计算；
-- 测试数据、完整测试集及原划分/配对关系可获取；
-- 推理参数、预处理、seed/样本数、失败处理和聚合方式明确；
-- 版本、许可和下载来源可冻结。
-
-<strong>RD-AAA（Training Delivery Completeness AAA，训练交付完整度 AAA）</strong>至少要求：
-
-- TD（Test Delivery Completeness，测试交付完整度）所需链路完整，并且该权重与目标主张对应；
-- 训练代码和有效启动配置可获取；
-- 训练原始数据、样本清单、过滤、预处理和原划分可获取或可按公开步骤确定性重建；
-- 初始化权重、教师/奖励模型等依赖工件可获取；
-- 优化器、学习率、batch、步数、随机性、算力、checkpoint 选择及恢复设置明确。
-
-<strong>TR-AAA（Test Reproduction Completeness AAA，测试复现完整度 AAA）</strong>要求复现者使用冻结的 TD-AAA（Test Delivery Completeness AAA，测试交付完整度 AAA）链路实际生成/推理、全量检查输出、独立运行 evaluator、保存逐样本结果并按原方法聚合；随机评测还应按预注册方案重复并报告不确定性。
-
-<strong>RR-AAA（Training Reproduction Completeness AAA，训练复现完整度 AAA）</strong>要求从公开原始数据开始，实际执行预处理、完整训练、checkpoint 选择、推理、评测和聚合，并保存所有关键 provenance。指标是否接近论文值另记为 `matched`、`not_matched` 或带不确定性的比较结论。
-
 ### 示例评级
 
 假设对上述主结果表审计后得到：
 
-| 主张 | 类型 | TD（Test Delivery） | RD（Training Delivery） | TR（Test Reproduction） | RR（Training Reproduction） | 数值结论 | 说明 |
-|---|---|---:|---:|---:|---:|---|---|
-| `b1` | 本模型主张 | AAA | AA | AAA | BBB | matched | 精确权重、测试集和 evaluator 均公开并已复现；训练数据需按公开脚本重建，但尚只完成训练子集。 |
-| `b2` | 本模型主张 | A | CCC | A | NR | not_strictly_comparable | 权重公开，但作者未给 seed 和完整测试划分；训练数据未公开。只能报告固定独立协议结果。 |
-| `a1` | 其他模型主张 | BBB | NR | BBB | NR | author_table_only | 本文没有重新运行 SOTA1，只引用其原论文数值；可回到 SOTA1 原论文继续单独评级。 |
-| `a2` | 其他模型主张 | D | NR | D | NR | invalidated | 论文使用的 SOTA1 数据划分与本表 Ours 不同，却放在同一列直接比较，该比较链路无效。 |
+| 主张 | 类型 | TD | RD | TR | RR | 数值结论 |
+|---|---|:---:|:---:|:---:|:---:|---|
+| `b1` | 本模型 | AAA | AA | AAA | BBB | matched |
+| `b2` | 本模型 | A | CCC | A | NR | not_strictly_comparable |
+| `a1` | 其他模型 | BBB | NR | BBB | NR | author_table_only |
+| `a2` | 其他模型 | D | NR | D | NR | invalidated |
+
+- **`b1`：** 精确权重、测试集和 evaluator 均公开并已复现；训练数据需按公开脚本重建，但尚只完成训练子集。
+- **`b2`：** 权重公开，但作者未给 seed 和完整测试划分；训练数据未公开。只能报告固定独立协议结果。
+- **`a1`：** 本文没有重新运行 SOTA1，只引用其原论文数值；可回到 SOTA1 原论文继续单独评级。
+- **`a2`：** 论文使用的 SOTA1 数据划分与本表 Ours 不同，却放在同一列直接比较，该比较链路无效。
 
 对于其他模型主张，要进一步记录数值来源：`cited_from_original_paper`、`rerun_by_current_authors` 或 `unclear`。只有当前论文确实使用同一协议重新运行了对方模型，`a1/a2` 才能直接继承当前表格的测试链路；单纯转抄原论文数字不能视为本文完成了复现。
 

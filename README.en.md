@@ -65,24 +65,19 @@ The following running example uses one fictional claim: Table 1 of `Paper X` rep
 
 The grade measures <strong>chain completeness, not performance or paper credibility</strong>. A complete pinned reproduction that stably disagrees with the paper may still be `TR-AAA` (Test Reproduction Completeness AAA), with the numeric outcome separately recorded as `not_matched` or `contradicted_under_pinned_protocol`. A nearby number alone never earns a high grade.
 
-### AAA requirements by dimension
-
-<strong>TD-AAA (Test Delivery Completeness AAA)</strong> requires a claim-matching downloadable checkpoint; available evaluation code and dependent weights, or an unambiguous metric definition; obtainable test data with the complete original split/pairing; specified inference, preprocessing, seeds/sample count, failure handling and aggregation; and freezable versions, licenses and sources.
-
-<strong>RD-AAA (Training Delivery Completeness AAA)</strong> additionally requires executable training code/configuration; raw training data with sample manifest, filtering, preprocessing and original split, or deterministic public reconstruction; all initialization/teacher/reward artifacts; and optimizer, schedule, batch, steps, randomness, compute, checkpoint selection and resume settings.
-
-<strong>TR-AAA (Test Reproduction Completeness AAA)</strong> requires the reproducer to execute the frozen TD-AAA (Test Delivery Completeness AAA) path, audit all outputs, run the evaluator independently, retain per-item results, reproduce aggregation, and predeclare repetitions and uncertainty for stochastic evaluation.
-
-<strong>RR-AAA (Training Reproduction Completeness AAA)</strong> requires executing preprocessing, complete training, checkpoint selection, inference, evaluation and aggregation from public raw data while preserving provenance. Numeric agreement is recorded separately as `matched`, `not_matched`, or an uncertainty-aware conclusion.
-
 ### Rating example
 
-| Claim | Type | TD (Test Delivery) | RD (Training Delivery) | TR (Test Reproduction) | RR (Training Reproduction) | Numeric outcome | Explanation |
-|---|---|---:|---:|---:|---:|---|---|
-| `b1` | self-model | AAA | AA | AAA | BBB | matched | Exact weights, test set and evaluator were released and replayed; training data requires a public reconstruction script, and only a training subset has run. |
-| `b2` | self-model | A | CCC | A | NR | not_strictly_comparable | Weights are public, but seeds and the full test split are missing; training data is unavailable. Only an independent fixed-protocol result is defensible. |
-| `a1` | other-model | BBB | NR | BBB | NR | author_table_only | The current paper did not rerun SOTA1; it copied the original paper's number. Audit the SOTA1 paper separately. |
-| `a2` | other-model | D | NR | D | NR | invalidated | SOTA1 used a different dataset split from Ours although both appear in the same comparison column. |
+| Claim | Type | TD | RD | TR | RR | Outcome |
+|---|---|:---:|:---:|:---:|:---:|---|
+| `b1` | self-model | AAA | AA | AAA | BBB | matched |
+| `b2` | self-model | A | CCC | A | NR | not_strictly_comparable |
+| `a1` | other-model | BBB | NR | BBB | NR | author_table_only |
+| `a2` | other-model | D | NR | D | NR | invalidated |
+
+- **`b1`:** Exact weights, test set and evaluator were released and replayed; training data requires a public reconstruction script, and only a training subset has run.
+- **`b2`:** Weights are public, but seeds and the full test split are missing; training data is unavailable. Only an independent fixed-protocol result is defensible.
+- **`a1`:** The current paper did not rerun SOTA1; it copied the original paper's number. Audit the SOTA1 paper separately.
+- **`a2`:** SOTA1 used a different dataset split from Ours although both appear in the same comparison column.
 
 For other-model claims, also record whether the value was `cited_from_original_paper`, `rerun_by_current_authors`, or `unclear`. Only an actual rerun under the same protocol belongs directly to the current table's test chain; copying a cited number is not a reproduction by the current authors.
 
